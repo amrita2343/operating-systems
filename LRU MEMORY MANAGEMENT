@@ -1,0 +1,82 @@
+#include &lt;stdio.h&gt;
+
+#define MAX_FRAMES 10 
+#define MAX_PAGES 100 
+int findLRU(int recent[], int numFrames) {
+int min = recent[0], pos = 0;
+for (int i = 1; i &lt; numFrames; i++) {
+if (recent[i] &lt; min) {
+
+min = recent[i];
+pos = i;
+}
+}
+return pos
+}
+void lruPageReplacement(int pages[], int numPages, int numFrames) {
+int frames[MAX_FRAMES]; // Stores pages in memory
+int recent[MAX_FRAMES]; // Tracks when each page was last used
+int pageFaults = 0, time = 0;
+for (int i = 0; i &lt; numFrames; i++) {
+frames[i] = -1;
+recent[i] = 0;
+}
+printf(&quot;\nPage Reference | Frames\n&quot;);
+printf(&quot;-----------------------\n&quot;);
+for (int i = 0; i &lt; numPages; i++) {
+printf(&quot;%d\t\t&quot;, pages[i]);
+int found = 0;
+for (int j = 0; j &lt; numFrames; j++) {
+if (frames[j] == pages[i]) {
+found = 1;
+recent[j] = ++time; // Update last used time
+printf(&quot;No Page Fault\n&quot;);
+break;
+}
+}
+if (!found) {
+int pos = -1;
+for (int j = 0; j &lt; numFrames; j++) {
+if (frames[j] == -1) {
+
+pos = j;
+break;
+}
+}
+if (pos == -1) {
+pos = findLRU(recent, numFrames);
+}
+frames[pos] = pages[i];
+recent[pos] = ++time;
+pageFaults++;
+for (int j = 0; j &lt; numFrames; j++) {
+if (frames[j] != -1) {
+printf(&quot;%d &quot;, frames[j]);
+} else {
+printf(&quot;- &quot;);
+}
+}
+printf(&quot;\n&quot;);
+}
+}
+printf(&quot;\nTotal Page Faults: %d\n&quot;, pageFaults);
+}
+int main() {
+int pages[MAX_PAGES];
+int numPages, numFrames;
+printf(&quot;Enter the number of pages: &quot;);
+scanf(&quot;%d&quot;, &amp;numPages);
+printf(&quot;Enter the page reference string: &quot;);
+for (int i = 0; i &lt; numPages; i++) {
+scanf(&quot;%d&quot;, &amp;pages[i]);
+}
+
+printf(&quot;Enter the number of frames: &quot;);
+scanf(&quot;%d&quot;, &amp;numFrames);
+if (numFrames &gt; MAX_FRAMES) {
+printf(&quot;Error: Number of frames exceeds maximum limit (%d).\n&quot;, MAX_FRAMES);
+return 1;
+}
+lruPageReplacement(pages, numPages, numFrames);
+return 0;
+}
