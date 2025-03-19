@@ -1,0 +1,96 @@
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#define MAX_USERS 5
+#define MAX_FILES 5
+typedef struct {
+char filename[50];
+} File;
+typedef struct {
+char username[50];
+int file_count;
+File files[MAX_FILES];
+} Directory;
+Directory directories[MAX_USERS]; // Array of user directories
+int user_count = 0; // Count of created user directories
+void createUserDirectory() {
+if (user_count &gt;= MAX_USERS) {
+
+printf(&quot;\nError: Maximum number of user directories reached!\n&quot;);
+return;
+}
+printf(&quot;\nEnter username for new directory: &quot;);
+scanf(&quot;%s&quot;, directories[user_count].username);
+directories[user_count].file_count = 0; // No files yet
+user_count++;
+printf(&quot;User directory created successfully!\n&quot;);
+}
+void createFileInDirectory() {
+char username[50];
+printf(&quot;\nEnter username to add a file: &quot;);
+scanf(&quot;%s&quot;, username);
+int found = -1;
+for (int i = 0; i &lt; user_count; i++) {
+if (strcmp(directories[i].username, username) == 0) {
+found = i;
+break;
+}
+}
+if (found == -1) {
+printf(&quot;\nError: User directory not found!\n&quot;);
+return;
+}
+if (directories[found].file_count &gt;= MAX_FILES) {
+printf(&quot;\nError: Maximum number of files reached for this directory!\n&quot;);
+return;
+}
+printf(&quot;Enter filename: &quot;);
+scanf(&quot;%s&quot;, directories[found].files[directories[found].file_count].filename);
+directories[found].file_count++;
+
+printf(&quot;File added successfully!\n&quot;);
+}
+void displayDirectories() {
+if (user_count == 0) {
+printf(&quot;\nNo user directories found!\n&quot;);
+return;
+}
+printf(&quot;\n--- Directory Structure ---\n&quot;);
+for (int i = 0; i &lt; user_count; i++) {
+printf(&quot;\nUser: %s\n&quot;, directories[i].username);
+if (directories[i].file_count == 0) {
+printf(&quot; No files\n&quot;);
+} else {
+for (int j = 0; j &lt; directories[i].file_count; j++) {
+printf(&quot; - %s\n&quot;, directories[i].files[j].filename);
+}
+}
+}
+}
+int main() {
+int choice;
+while (1) {
+printf(&quot;\nTwo-Level Directory Structure&quot;);
+printf(&quot;\n1. Create User Directory&quot;);
+printf(&quot;\n2. Create File in Directory&quot;);
+printf(&quot;\n3. Display Directories and Files&quot;);
+printf(&quot;\n4. Exit&quot;);
+printf(&quot;\nEnter your choice: &quot;);
+scanf(&quot;%d&quot;, &amp;choice);
+
+switch (choice) {
+case 1:
+createUserDirectory();
+break;
+case 2:
+createFileInDirectory();
+break;
+case 3:
+displayDirectories();
+break;
+case 4:
+printf(&quot;\nExiting program...\n&quot;);
+return 0;
+default:
+printf(&quot;\nInvalid choice! Please try again.\n&quot;);
+}
+}
