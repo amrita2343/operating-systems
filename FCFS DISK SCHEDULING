@@ -1,0 +1,28 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+void FCFS(int queue[], int n, int head) {
+int total_seek_time = 0;
+printf(&quot;\nSequence of disk access:\n&quot;);
+printf(&quot;%d&quot;, head);
+for (int i = 0; i &lt; n; i++) {
+printf(&quot; -&gt; %d&quot;, queue[i]);
+total_seek_time += abs(queue[i] - head);
+head = queue[i];
+}
+printf(&quot;\nTotal seek time: %d\n&quot;, total_seek_time);
+printf(&quot;Average seek time: %.2f\n&quot;, (float)total_seek_time / n);
+}
+int main() {
+int n, head;
+printf(&quot;Enter the number of disk requests: &quot;);
+scanf(&quot;%d&quot;, &amp;n);
+int queue[n];
+printf(&quot;Enter the disk request sequence: &quot;);
+for (int i = 0; i &lt; n; i++) {
+scanf(&quot;%d&quot;, &amp;queue[i]);
+}
+printf(&quot;Enter the initial head position: &quot;);
+scanf(&quot;%d&quot;, &amp;head);
+FCFS(queue, n, head);
+return 0;
+}
