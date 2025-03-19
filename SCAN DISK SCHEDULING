@@ -1,0 +1,76 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+void SCAN(int queue[], int n, int head, int disk_size, int direction) {
+int total_seek_time = 0;
+int temp[n + 2], idx = 0;
+if (direction == 1) { // Moving towards higher tracks
+temp[idx++] = head;
+for (int i = 0; i &lt; n; i++) temp[idx++] = queue[i];
+temp[idx++] = disk_size - 1; // End boundary
+} else { // Moving towards lower tracks
+temp[idx++] = 0; // Start boundary
+temp[idx++] = head;
+for (int i = 0; i &lt; n; i++) temp[idx++] = queue[i];
+}
+for (int i = 0; i &lt; idx - 1; i++) {
+for (int j = 0; j &lt; idx - i - 1; j++) {
+if (temp[j] &gt; temp[j + 1]) {
+int t = temp[j];
+temp[j] = temp[j + 1]
+
+temp[j + 1] = t;
+}
+}
+}
+int head_pos = 0;
+for (int i = 0; i &lt; idx; i++) {
+if (temp[i] == head) {
+head_pos = i;
+break;
+}
+}
+printf(&quot;\nSequence of disk access:\n&quot;);
+if (direction == 1) {
+for (int i = head_pos; i &lt; idx; i++) {
+printf(&quot;%d &quot;, temp[i]);
+if (i &gt; head_pos)
+total_seek_time += abs(temp[i] - temp[i - 1]);
+}
+for (int i = head_pos - 1; i &gt;= 0; i--) {
+printf(&quot;%d &quot;, temp[i]);
+total_seek_time += abs(temp[i] - temp[i + 1]);
+}
+} else {
+for (int i = head_pos; i &gt;= 0; i--) {
+printf(&quot;%d &quot;, temp[i]);
+if (i &lt; head_pos)
+total_seek_time += abs(temp[i] - temp[i + 1]);
+}
+for (int i = head_pos + 1; i &lt; idx; i++) {
+printf(&quot;%d &quot;, temp[i]);
+total_seek_time += abs(temp[i] - temp[i - 1]);
+
+}
+}
+
+printf(&quot;\nTotal seek time: %d\n&quot;, total_seek_time);
+printf(&quot;Average seek time: %.2f\n&quot;, (float)total_seek_time / n);
+}
+int main() {
+int n, head, disk_size, direction;
+printf(&quot;Enter the number of disk requests: &quot;);
+scanf(&quot;%d&quot;, &amp;n);
+int queue[n];
+printf(&quot;Enter the disk request sequence: &quot;);
+for (int i = 0; i &lt; n; i++) {
+scanf(&quot;%d&quot;, &amp;queue[i]);
+}
+printf(&quot;Enter the initial head position: &quot;);
+scanf(&quot;%d&quot;, &amp;head);
+printf(&quot;Enter the total disk size: &quot;);
+scanf(&quot;%d&quot;, &amp;disk_size);
+printf(&quot;Enter the direction (1 for high, 0 for low): &quot;);
+scanf(&quot;%d&quot;, &amp;direction);
+SCAN(queue, n, head, disk_size, direction);
+return 0;
+}
