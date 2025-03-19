@@ -1,0 +1,54 @@
+#include&lt;stdio.h&gt;
+#define max_size 100
+void fifo(int pages[],int total,int frames)
+{
+int memory[max_size],index=0,count=0,faults=0;
+int i,j;
+for(i=0;i&lt;total;i++)
+{
+int found=0;
+for(j=0;j&lt;count;j++)
+{
+if(memory[j]==pages[i])
+{
+found=1;
+break;
+}
+}
+if(!found)
+{
+faults++;
+if(count&lt;frames)
+{
+memory[count++]=pages[i];
+}
+else
+{
+memory[index]=pages[i];
+index=(index+1)%frames;
+
+}
+}
+printf(&quot;frames : &quot;);
+for(j=0;j&lt;count;j++)
+{
+printf(&quot;%d&quot;,memory[j]);
+}
+printf(&quot;\n&quot;);
+}
+printf(&quot;Total page faults : %d\n&quot;,faults);
+}
+int main()
+{
+int pages[max_size],total,frames;
+printf(&quot;no of page requests : \n&quot;);
+scanf(&quot;%d&quot;,&amp;total);
+printf(&quot;enter page requets : \n&quot;);
+for(int i=0;i&lt;total;i++)
+{
+scanf(&quot;%d&quot;,&amp;pages[i]);
+}
+printf(&quot;enter no of frames : \n&quot;);
+scanf(&quot;%d&quot;,&amp;frames);
+fifo(pages,total,frames);
+}
